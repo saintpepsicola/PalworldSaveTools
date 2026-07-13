@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  PalworldSaveTools application manifest.
+
+  Embedded into the Nuitka output via the windows-manifest-file option
+  (see build/nuitka/build_nuitka.py).
+
+  Why this matters for antivirus cleanliness:
+    * asInvoker         : declares we do NOT request elevation. Many
+                          droppers and injectors request requireAdministrator;
+                          explicitly choosing asInvoker is a reputation
+                          positive for heuristics that score the requested
+                          execution level.
+    * PerMonitorV2      : declares per-monitor DPI awareness. Legitimate
+                          desktop GUI apps declare this; malware launchers
+                          typically ship no manifest or a minimal one.
+    * supportedOS       : explicitly targets Win 10 and 11 GUIDs so the
+                          loader applies the correct behavior, avoiding
+                          the "no manifest, compatibility shim" path.
+    * Common Controls v6: standard dependency declaration; its absence is
+                          another small malware-typical tell.
+
+  NOTE: this manifest does NOT embed a digital signature. See
+        build/sign/sign_exe.py for Authenticode signing (self-signed or
+        real OV/EV cert). The manifest and the signature are independent
+        and complementary.
+-->
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity
+      type="win32"
+      name="Pylar.PalworldSaveTools"
+      version="2.0.5.0"
+      processorArchitecture="*"/>
+
+  <!-- Compatibility: declare the OSes we target so the loader does not
+       apply legacy compatibility shims (which themselves raise heuristic
+       suspicion). -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+      <!-- Windows 8.1 -->
+      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>
+      <!-- Windows 8 -->
+      <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/>
+      <!-- Windows 7 -->
+      <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>
+    </application>
+  </compatibility>
+
+  <!-- Requested execution level: run as the invoking user (no elevation).
+       This is the safest, least-suspicious setting for a user-mode tool. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <!-- DPI awareness: per-monitor v2 for crisp HiDPI rendering. Declared up
+       front so the app looks like a well-formed modern desktop binary. -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+    </windowsSettings>
+  </application>
+
+  <!-- Common Controls v6: standard modern dependency declaration. -->
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity
+          type="win32"
+          name="Microsoft.Windows.Common-Controls"
+          version="6.0.0.0"
+          processorArchitecture="*"
+          publicKeyToken="6595b64144ccf1df"
+          language="*"/>
+    </dependentAssembly>
+  </dependency>
+</assembly>

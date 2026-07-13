@@ -78,3 +78,14 @@ XGP_converted_saves/
 *.savc
 *.7z
 .pytest_cache/
+
+# Code signing secrets / cert material (never commit)
+*.pfx
+*.p12
+*.pvk
+*.key
+*.pem
+*.cer
+*.crt
+cert/
+certs/
